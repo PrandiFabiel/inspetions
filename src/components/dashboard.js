@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+
 import BarraSuperior from "./barraSuperior";
 import "../css/dash.css";
 function dashboard() {

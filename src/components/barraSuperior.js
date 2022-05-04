@@ -7,7 +7,7 @@ function BarraSuperior() {
 
   return (
     <div className="barra-superior">
-        <Link to="/"><img className="logo-16" src={logo}/></Link>
+        <Link to="/"><img className="logo-16" alt="Barra" src={logo}/></Link>
     </div>
   );
 }
