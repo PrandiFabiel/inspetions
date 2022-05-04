@@ -1,0 +1,25 @@
+.barra-superior {
+    align-items: center;
+    background-color: #4a4a4a;
+    display: flex;
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    /*margin-left: 6.1%;*/
+    z-index: 1;
+}
+
+.logo-16 {
+    align-self: flex-start;
+    height: 27px;
+    object-fit: cover;
+    width: 41px;
+    margin-left: 30%;
+}
+
+
+.barra-superior.barra-superior-1 {
+    left: 0;
+    position: absolute;
+    top: 0;
+}

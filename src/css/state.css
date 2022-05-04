@@ -1,0 +1,28 @@
+
+  .divFa {
+    display: flex;
+    width: 100%;
+    position: relative;
+    /*margin-left: 6.1%;*/
+} 
+
+.btState {
+    border-radius: 10px;
+    height: 60px;
+    width: 50%;
+    background-color: #00eeff8a;
+    border-color: black;
+    margin-left: 20%;
+  }
+
+  .input1S {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #4a4a4a;
+    border-radius: 30px;
+  }
+
+  .divD{
+    font-size: 25px;
+  }

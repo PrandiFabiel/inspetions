@@ -1,0 +1,16 @@
+.ip1 {
+    align-items: flex-end;
+    background-color: #f8e8a996;
+    border-radius: 10px;
+    display: flex;
+    height: 40px;
+    justify-content: flex-end;
+  }
+
+  .bt1 {
+    border-radius: 10px !important;
+    height: 50px;
+    width: 50%;
+    background-color: #00eeff8a !important;
+    border-color: black !important;
+  }

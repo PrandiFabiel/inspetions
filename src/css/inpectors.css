@@ -1,0 +1,103 @@
+.icon {
+    font-size: 40px;
+    font-weight: 900;
+    color: #e4e4e4;
+}
+
+.divFa {
+    display: flex;
+    width: 100%;
+    position: relative;
+    /*margin-left: 6.1%;*/
+} 
+
+.input1 {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #4a4a4a;
+}
+
+.bt {
+    align-items: center;
+    margin-left: 55%;
+    background-image: linear-gradient(45deg, #fff17f 0, #ffe16d 16.67%, #ffcc56 33.33%, #f2b53c 50%, #e59e1f 66.67%, #db8900 83.33%, #d47800 100%);
+    border-radius: 100px;
+    margin-bottom: 5%;
+    border-color: #e4e4e4;
+    height: 70px;
+    width: 50%;
+}
+
+
+.table-wrapper {
+    
+    height: 430px;
+    /*Altura de ejemplo 
+    overflow: auto;
+    width: 100%; */
+}
+
+.table-wrapper table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-wrapper table thead {
+    position: -webkit-sticky;
+    /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+.table-wrapper table thead th {
+    background-color: #fff;
+    font-weight: bold !important;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* esto espera las palabras 
+  td{
+    word-break: break-all;
+  }*/
+
+
+/* Tamaño del scroll */
+.table-wrapper::-webkit-scrollbar {
+    width: 10px;
+
+    height: 10px;
+}
+
+/* Estilos barra (thumb) de scroll */
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:active {
+    background-color: #999999;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos track de scroll */
+.table-wrapper::-webkit-scrollbar-track {
+    background: #e1e1e1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-track:hover,
+.table-wrapper::-webkit-scrollbar-track:active {
+    background: #d4d4d4;
+}

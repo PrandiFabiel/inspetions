@@ -1,0 +1,18 @@
+.bt1S {
+    border-radius: 10px;
+    height: 60px;
+    width: 50%;
+    background-color: #f8e8a996;
+    border-color: black;
+  }
+
+  .divFa {
+    display: flex;
+    width: 100%;
+    position: relative;
+    /*margin-left: 6.1%;*/
+} 
+
+.div1{
+    margin-left: 15%;
+}
