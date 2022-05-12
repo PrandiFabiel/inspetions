@@ -7,7 +7,6 @@ function FormCities() {
   const [itemsState, setItemsState] = useState([]);
   const navigate = useNavigate();
 
-  
   //get estados
   useEffect(() => {
     fetch("http://devcompuservi.ddns.net:8080/state/list")
@@ -26,6 +25,7 @@ function FormCities() {
   //Post cities
   const [State, setState] = useState("");
   const [Name, setName] = useState("");
+  let StateEdit = 0;
 
   const submit = (e) => {
     console.log(State, Name);
@@ -48,13 +48,11 @@ function FormCities() {
           icon: "success",
         }).then(() => {
           //window.location.reload();
-          navigate('/listCities');
+          navigate("/listCities");
         });
       }
     });
   };
-
-  //const [items, setItems] = useState({ name: " " });
 
   function buscar(id) {
     //get cities
@@ -62,7 +60,6 @@ function FormCities() {
       .then((res) => res.json())
       .then(
         (result) => {
-          //setItems(result);
           if (result.status === 400) {
             swal("Empty", "Introduzca el id", "warning");
           }
@@ -71,6 +68,12 @@ function FormCities() {
           let inputName = document.getElementById("nameInput");
           inputState.value = result.idState;
           inputName.value = result.name;
+          StateEdit = result.idState;
+
+          if (StateEdit > 0) {
+            setState(StateEdit);
+            setName(result.name);
+          }
         },
         (error) => {
           swal("Undefined", "not exist", "warning");
@@ -95,7 +98,7 @@ function FormCities() {
                     className="form-control"
                     onChange={(e) => setInputSearch(e.target.value)}
                     id="inputSearch"
-                    placeholder="Search..."
+                    placeholder="Introduce el id..."
                   />
                 </div>
                 <div className="col-md-6 mt-2">
