@@ -77,6 +77,13 @@ function Settings() {
                 </button>
               </Link>
             </div>
+            <div className="col-md-6 mt-4">
+              <Link to="/sticker">
+                <button type="button" className="btn text-dark bt1S">
+                Stickers
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

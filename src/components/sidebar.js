@@ -7,7 +7,7 @@ import {
   CDBSidebarMenuItem,
 } from "cdbreact";
 import { NavLink } from "react-router-dom";
-import "../css/sidebear.css"; 
+import "../css/sidebear.css";
 
 const Sidebar = () => {
   return (
@@ -27,22 +27,35 @@ const Sidebar = () => {
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
-            <NavLink  to="/dashboard">
-              <CDBSidebarMenuItem style={{color: "black"}} icon="home">Dashboard</CDBSidebarMenuItem>
+            <NavLink to="/dashboard">
+              <CDBSidebarMenuItem style={{ color: "black" }} icon="home">
+                Dashboard
+              </CDBSidebarMenuItem>
             </NavLink>
             <NavLink to="/services">
-              <CDBSidebarMenuItem style={{color: "black"}} icon="plus">New Service</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem style={{ color: "black" }} icon="plus">
+                New Service
+              </CDBSidebarMenuItem>
             </NavLink>
             <NavLink to="/customers">
-              <CDBSidebarMenuItem style={{color: "black"}} icon="users">Customers</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem style={{ color: "black" }} icon="users">
+                Customers
+              </CDBSidebarMenuItem>
             </NavLink>
             <NavLink to="/inpectors">
-              <CDBSidebarMenuItem style={{color: "black"}} icon="user">
+              <CDBSidebarMenuItem style={{ color: "black" }} icon="user">
                 Inpectors
               </CDBSidebarMenuItem>
             </NavLink>
+            <NavLink to="/main">
+              <CDBSidebarMenuItem style={{ color: "black" }} icon="list-ul">
+                Lists
+              </CDBSidebarMenuItem>
+            </NavLink>
             <NavLink to="/settings">
-              <CDBSidebarMenuItem style={{color: "black"}} icon="cog">Settings</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem style={{ color: "black" }} icon="cog">
+                Settings
+              </CDBSidebarMenuItem>
             </NavLink>
 
             {/*<NavLink  to="/" target="_blank" >

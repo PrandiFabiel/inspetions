@@ -12,6 +12,7 @@ function Form() {
   const [itemsDrive, setItemsDrive] = useState([]);
   const [itemsColor, setItemsColor] = useState([]);
   const [itemsinspectorType, setItemsinspectorType] = useState([]);
+  const [itemsSticker, setItemsSticker] = useState([]);
 
   //get inspector
   useEffect(() => {
@@ -133,6 +134,21 @@ function Form() {
       );
   }, []);
 
+  //get sticker
+  useEffect(() => {
+    fetch("http://devcompuservi.ddns.net:8080/sticker/list")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setItemsSticker(result);
+        },
+        // Nota: es importante manejar errores aquí y no en
+        // un bloque catch() para que no interceptemos errores
+        // de errores reales en los componentes.
+        (error) => {}
+      );
+  }, []);
+
   //Post service
   const [Inspector, setInspector] = useState("");
   const [Date, setDate] = useState("");
@@ -149,6 +165,7 @@ function Form() {
   const [Price, setPrice] = useState("");
   const [ServicePaid, setServicePaid] = useState("");
   const [Approved, setApproved] = useState("");
+  const [sticker, setSticker] = useState("");
 
   const submit = (e) => {
     console.log(
@@ -166,7 +183,8 @@ function Form() {
       InspectionTypeName,
       Price,
       ServicePaid,
-      Approved
+      Approved,
+      sticker
     );
     e.preventDefault();
     fetch("http://devcompuservi.ddns.net:8080/service/save", {
@@ -187,7 +205,7 @@ function Form() {
         servicePaid: ServicePaid,
         inspectionApproved: Approved,
         vinnumber: VINNumber,
-        idSticker: 1
+        idSticker: sticker,
       }),
       headers: { "Content-Type": "application/json" },
     }).then((res) => {
@@ -198,7 +216,11 @@ function Form() {
         let formulario = document.getElementById("formul");
         formulario.reset();
       } else {
-        swal("Error", "Ha ocurrido un error, intente rellenar los campos.", "error");
+        swal(
+          "Error",
+          "Ha ocurrido un error, intente rellenar los campos.",
+          "error"
+        );
       }
     });
   };
@@ -393,6 +415,25 @@ function Form() {
                 onChange={(e) => setMilles(e.target.value)}
               />
             </div>
+            <div className="col-md-12">
+              <div className="col-md-1">
+                <label htmlFor="inputEmail4" className="form-label">
+                  Sticker
+                </label>
+              </div>
+              <select
+                className="form-select"
+                defaultValue={"Hola"}
+                onChange={(e) => setSticker(e.target.value)}
+              >
+                <option defaultValue>Select Sticker</option>
+                {itemsSticker.map((item) => (
+                  <option key={item.idSticker} value={item.idSticker}>
+                    {item.stickerNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
             <h1>Inpector</h1>
             <hr></hr>
             <div className="col-md-6">
@@ -434,7 +475,7 @@ function Form() {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  onChange={(e) => setServicePaid(e.target.value = 1)}
+                  onChange={(e) => setServicePaid((e.target.value = 1))}
                 />
                 <div className="col-md-2">
                   <label htmlFor="inputEmail4" className="form-label">
@@ -449,7 +490,7 @@ function Form() {
                   className="form-check-input"
                   type="checkbox"
                   id="gridCheck"
-                  onChange={(e) => setApproved(e.target.value = 1)}
+                  onChange={(e) => setApproved((e.target.value = 1))}
                 />
                 <div className="col-md-4">
                   <label htmlFor="inputEmail4" className="form-label">
