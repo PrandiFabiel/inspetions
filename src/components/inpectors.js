@@ -73,8 +73,8 @@ function Inpectors() {
                       <td>{item.address}</td>
                       <td>{item.stateName}</td>
                       <td>{item.cityName}</td>
-                      <td>{item.email}</td>
                       <td>{item.zipCode}</td>
+                      <td>{item.email}</td>
                       <td>{item.commission}</td>
                     </tr>
                   ))}
