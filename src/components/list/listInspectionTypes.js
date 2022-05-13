@@ -40,12 +40,14 @@ function ListInspectionType() {
               <thead className="">
                 <tr>
                   <th scope="col" >Name</th>
+                  <th scope="col" >Price</th>
                 </tr>
               </thead>
               <tbody>
                 {itemsType.map((item) => (
                   <tr key={item.idInspectionType}>
                     <td>{item.name}</td>
+                    <td>{item.price}</td>
                   </tr>
                 ))}
 

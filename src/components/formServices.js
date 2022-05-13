@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/formServices.css";
 import swal from "sweetalert";
 function Form() {
@@ -13,6 +13,8 @@ function Form() {
   const [itemsColor, setItemsColor] = useState([]);
   const [itemsinspectorType, setItemsinspectorType] = useState([]);
   const [itemsSticker, setItemsSticker] = useState([]);
+
+  const navigate = useNavigate();
 
   //get inspector
   useEffect(() => {
@@ -165,7 +167,8 @@ function Form() {
   const [Price, setPrice] = useState("");
   const [ServicePaid, setServicePaid] = useState("");
   const [Approved, setApproved] = useState("");
-  const [sticker, setSticker] = useState("");
+  const [sticker, setSticker] = useState(0);
+  let edit = 0;
 
   const submit = (e) => {
     console.log(
@@ -190,6 +193,7 @@ function Form() {
     fetch("http://devcompuservi.ddns.net:8080/service/save", {
       method: "POST",
       body: JSON.stringify({
+        idService: inputSearch,
         idBrand: Brand,
         idModel: Model,
         idColor: Color,
@@ -210,20 +214,76 @@ function Form() {
       headers: { "Content-Type": "application/json" },
     }).then((res) => {
       res.json();
-      console.log(res.ok);
-      if (res.ok === true) {
-        swal("Guardado", "Guardado correctamente!", "success");
-        let formulario = document.getElementById("formul");
-        formulario.reset();
-      } else {
-        swal(
-          "Error",
-          "Ha ocurrido un error, intente rellenar los campos.",
-          "error"
-        );
-      }
+      console.log(res.ok); //la respuesta da error pero aun asi se guarda...
+      swal({
+        title: "Guardado!",
+        text: "Guardado correctamente!",
+        icon: "success",
+      }).then(() => {
+        //navigate("/listServices");
+      });
     });
   };
+
+  function buscar(id) {
+    //get inspectors
+    fetch("http://devcompuservi.ddns.net:8080/service/find?id=" + id)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (result.status === 400) {
+            swal("Empty", "Introduzca el id", "warning");
+          }
+
+          document.getElementById("inputInspector").value = result.idInspector;
+          //document.getElementById("inputDate").value = result.date;
+          document.getElementById("inputCustomer").value = result.idCustomer;
+          document.getElementById("inputVIN").value = result.vinnumber;
+          document.getElementById("inputVType").value = result.idVehicleType;
+          document.getElementById("inputBrand").value = result.idBrand;
+          document.getElementById("inputYear").value = result.year;
+          document.getElementById("inputModel").value = result.idModel;
+          document.getElementById("inputDrivetrain").value =
+            result.idDrivetrain;
+          document.getElementById("inputColor").value = result.idColor;
+          document.getElementById("inputMiles").value = result.miles;
+          document.getElementById("inputSticker").value = result.idSticker;
+          document.getElementById("inputInspectorType").value =
+            result.idInspectionType;
+          document.getElementById("inputPrice").value = result.price;
+          document.getElementById("inputServicePaid").value =
+            result.servicePaid;
+          document.getElementById("inputInpectionApproved").value =
+            result.inspectionApproved;
+          edit = result.idService;
+
+          if (edit > 0) {
+            console.log("entro");
+            setInspector(result.idInspector);
+            setDate(result.date);
+            setCustomer(result.idCustomer);
+            setVINNumber(result.vinnumber);
+            setVType(result.idVehicleType);
+            setBrand(result.idBrand);
+            setYear(result.year);
+            setModel(result.idModel);
+            setDrivetrain(result.idDrivetrain);
+            setColor(result.idColor);
+            setMilles(result.miles);
+            setSticker(result.idSticker);
+            setInspectionTypeName(result.idInspectionType);
+            setPrice(result.price);
+            setServicePaid(result.ServicePaid);
+            setApproved(result.inspectionApproved);
+          }
+        },
+        (error) => {
+          swal("Undefined", "not exist", "warning");
+        }
+      );
+  }
+
+  let [inputSearch, setInputSearch] = useState("");
 
   return (
     <div className="App">
@@ -234,12 +294,34 @@ function Form() {
       >
         <div className="col-md-11 container card shadow-lg bg-white mt-5">
           <h1>Services</h1>
+          <div className="row">
+            <div className="col-md-4 mt-2">
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setInputSearch(e.target.value)}
+                id="inputSearch"
+                placeholder="Introduce el id..."
+              />
+            </div>
+            <div className="col-md-1 mt-2">
+              {" "}
+              <button
+                className="btn btn-outline-success"
+                type="button"
+                onClick={() => buscar(inputSearch)}
+              >
+                Search
+              </button>
+            </div>
+          </div>
           <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
             <div className="col-md-4">
               <label htmlFor="inputEmail4" className="fs-4 form-label">
                 Inpector
               </label>
               <select
+                id="inputInspector"
                 className="form-select ip1"
                 defaultValue={"Hola"}
                 onChange={(e) => setInspector(e.target.value)}
@@ -258,6 +340,7 @@ function Form() {
               </label>
               <input
                 type="date"
+                id="inputDate"
                 className="form-control ip1"
                 onChange={(e) => setDate(e.target.value)}
               />
@@ -267,6 +350,7 @@ function Form() {
                 Customer
               </label>
               <select
+                id="inputCustomer"
                 className="form-select ip1"
                 onChange={(e) => setCustomer(e.target.value)}
               >
@@ -288,9 +372,9 @@ function Form() {
               </div>
 
               <input
-                type="email"
+                type="text"
                 className="form-control"
-                id="inputEmail4"
+                id="inputVIN"
                 onChange={(e) => setVINNumber(e.target.value)}
               />
             </div>
@@ -301,6 +385,7 @@ function Form() {
                 </label>
               </div>
               <select
+                id="inputVType"
                 className="form-select"
                 defaultValue={"Hola"}
                 onChange={(e) => setVType(e.target.value)}
@@ -320,6 +405,7 @@ function Form() {
                 </label>
               </div>
               <select
+                id="inputBrand"
                 className="form-select"
                 defaultValue={"Hola"}
                 onChange={(e) => setBrand(e.target.value)}
@@ -341,7 +427,7 @@ function Form() {
               <input
                 type="text"
                 className="form-control"
-                id="inputAddress2"
+                id="inputYear"
                 onChange={(e) => setYear(e.target.value)}
               />
             </div>
@@ -354,6 +440,7 @@ function Form() {
               <select
                 className="form-select"
                 defaultValue={"Hola"}
+                id="inputModel"
                 onChange={(e) => setModel(e.target.value)}
               >
                 <option defaultValue>Select Model</option>
@@ -373,6 +460,7 @@ function Form() {
               <select
                 className="form-select"
                 defaultValue={"Hola"}
+                id="inputDrivetrain"
                 onChange={(e) => setDrivetrain(e.target.value)}
               >
                 <option defaultValue>Select Drivetrain</option>
@@ -392,6 +480,7 @@ function Form() {
               <select
                 className="form-select"
                 defaultValue={"Hola"}
+                id="inputColor"
                 onChange={(e) => setColor(e.target.value)}
               >
                 <option defaultValue>Select Color</option>
@@ -411,7 +500,7 @@ function Form() {
               <input
                 type="text"
                 className="form-control"
-                id="inputZip"
+                id="inputMiles"
                 onChange={(e) => setMilles(e.target.value)}
               />
             </div>
@@ -424,6 +513,7 @@ function Form() {
               <select
                 className="form-select"
                 defaultValue={"Hola"}
+                id="inputSticker"
                 onChange={(e) => setSticker(e.target.value)}
               >
                 <option defaultValue>Select Sticker</option>
@@ -445,6 +535,7 @@ function Form() {
               <select
                 className="form-select"
                 defaultValue={"Hola"}
+                id="inputInspectorType"
                 onChange={(e) => setInspectionTypeName(e.target.value)}
               >
                 <option defaultValue>Select Inpection Type</option>
@@ -467,6 +558,7 @@ function Form() {
               <input
                 type="text"
                 className="form-control"
+                id="inputPrice"
                 onChange={(e) => setPrice(e.target.value)}
               />
             </div>
@@ -475,6 +567,7 @@ function Form() {
                 <input
                   className="form-check-input"
                   type="checkbox"
+                  id="inputServicePaid"
                   onChange={(e) => setServicePaid((e.target.value = 1))}
                 />
                 <div className="col-md-2">
@@ -489,7 +582,7 @@ function Form() {
                 <input
                   className="form-check-input"
                   type="checkbox"
-                  id="gridCheck"
+                  id="inputInpectionApproved"
                   onChange={(e) => setApproved((e.target.value = 1))}
                 />
                 <div className="col-md-4">

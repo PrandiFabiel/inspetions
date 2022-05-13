@@ -1,11 +1,12 @@
 import { useState } from "react";
 import swal from "sweetalert";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
 function FormVehicleType() {
   //Post vehicles types
   const [Name, setName] = useState("");
+  const navigate = useNavigate(); 
   //const [isLoaded, setIsLoaded] = useState(true);
 
   const submit = (e) => {
@@ -21,15 +22,13 @@ function FormVehicleType() {
       res.json();
       console.log(res.ok);
       if (res.ok === true) {
-        swal("Guardado", "Guardado correctamente!", "success");
-        let formulario = document.getElementById("formul");
-        formulario.reset();
-      } else {
-        swal(
-          "Error",
-          "Ha ocurrido un error, intente rellenar los campos.",
-          "error"
-        );
+        swal({
+          title: "Guardado!",
+          text: "Guardado correctamente!",
+          icon: "success",
+        }).then(() => {
+          navigate("/listDrivetrains");
+        });
       }
     });
   };

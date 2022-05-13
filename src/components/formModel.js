@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import swal from "sweetalert";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
 function FormModel() {
   const [itemsBrand, setItemsBrand] = useState([]);
+  const navigate = useNavigate();
   //get brand
   useEffect(() => {
     fetch("http://devcompuservi.ddns.net:8080/brand/list")
@@ -24,15 +26,24 @@ function FormModel() {
   const [brand, setBrand] = useState("");
 
   const submit = (e) => {
-    console.log(model);
-    console.log(brand);
     e.preventDefault();
     fetch("http://devcompuservi.ddns.net:8080/model/save", {
       method: "POST",
       body: JSON.stringify({ idBrand: brand, name: model }),
       headers: { "Content-Type": "application/json" },
     })
-      .then((res) => res.json());
+      .then((res) => {
+        res.json()
+        if (res.ok === true) {
+          swal({
+            title: "Guardado!",
+            text: "Guardado correctamente!",
+            icon: "success",
+          }).then(() => {
+            navigate("/listVHModels");
+          });
+        }
+      });
   };
 
   return (

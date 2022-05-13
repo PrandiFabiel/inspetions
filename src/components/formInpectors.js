@@ -49,7 +49,7 @@ function FormInpectors() {
   const [ZipCode, setZipCode] = useState("");
   const [Comiss, setComiss] = useState("");
   const [InspectorID, setInspectorID] = useState("");
-  let StateEdit = 0;
+  let edit = 0;
 
   const submit = (e) => {
     console.log(
@@ -90,7 +90,6 @@ function FormInpectors() {
           text: "Guardado correctamente!",
           icon: "success",
         }).then(() => {
-          //window.location.reload();
           navigate("/inpectors");
         });
       }
@@ -128,9 +127,9 @@ function FormInpectors() {
           inputZip.value = result.zipCode;
           inputCommission.value = result.commission;
           inputState.value = result.idState;
-          StateEdit = result.idState;
+          edit = result.idInspector;
 
-          if (StateEdit > 0) {
+          if (edit > 0) {
             setFname(result.firstName);
             setLname(result.lastName);
             setPhone(result.phone);
@@ -140,7 +139,7 @@ function FormInpectors() {
             setEmail(result.email);
             setZipCode(result.zipCode);
             setComiss(result.commission); 
-            setState(StateEdit);
+            setState(result.idState);
           }
         },
         (error) => {

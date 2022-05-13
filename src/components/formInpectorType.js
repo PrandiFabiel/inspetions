@@ -1,12 +1,13 @@
 import { useState } from "react";
 import swal from "sweetalert";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
 function FormInpectorType() {
   //Post inspectorType
   const [Name, setName] = useState("");
   const [Price, setPrice] = useState("");
+  const navigate = useNavigate();
 
   const submit = (e) => {
     console.log(Name);
@@ -22,15 +23,13 @@ function FormInpectorType() {
       res.json();
       console.log(res.ok);
       if (res.ok === true) {
-        swal("Guardado", "Guardado correctamente!", "success");
-        let formulario = document.getElementById("formul");
-        formulario.reset();
-      } else {
-        swal(
-          "Error",
-          "Ha ocurrido un error, intente rellenar los campos.",
-          "error"
-        );
+        swal({
+          title: "Guardado!",
+          text: "Guardado correctamente!",
+          icon: "success",
+        }).then(() => {
+          navigate("/listInsType");
+        });
       }
     });
   };
@@ -40,7 +39,7 @@ function FormInpectorType() {
       <div style={{ height: "100vh" }} className="container row mt-5">
         <div className="col-md-11 container mt-5">
           <div className="row">
-            <h1 className="offset-4">Inspector Type</h1>
+            <h1 className="offset-4">Inspection Type</h1>
             <div className="col-md-11 container card shadow-lg bg-white mt-5">
               <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
                 <div className="col-md-12">

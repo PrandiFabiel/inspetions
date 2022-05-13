@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/formServices.css";
 import swal from "sweetalert";
 function FormCustomers() {
   const [itemsCity, setItemsCity] = useState([]);
   const [itemsState, setItemsState] = useState([]);
   const [itemsCusType, setItemsCusType] = useState([]);
+  const navigate = useNavigate();
 
   //get ciudades
   useEffect(() => {
@@ -66,6 +67,7 @@ function FormCustomers() {
   const [ZipCode, setZipCode] = useState("");
   const [SalvagePrice, setSalvagePrice] = useState("");
   const [EmissionPrice, setEmissionPrice] = useState("");
+  let edit = 0;
 
   const submit = (e) => {
     console.log(
@@ -86,6 +88,7 @@ function FormCustomers() {
     fetch("http://devcompuservi.ddns.net:8080/customer/save", {
       method: "POST",
       body: JSON.stringify({
+        idCustomer: inputSearch,
         idCustomerType: type,
         businessName: BusName,
         firstName: Fname,
@@ -104,14 +107,65 @@ function FormCustomers() {
       res.json();
       console.log(res.ok);
       if (res.ok === true) {
-        swal("Guardado", "Guardado correctamente!", "success");
-        let formulario = document.getElementById("formul");
-        formulario.reset();
-      } else {
-        swal("Error", "Ha ocurrido un error, intente rellenar los campos.", "error");
+        swal({
+          title: "Guardado!",
+          text: "Guardado correctamente!",
+          icon: "success",
+        }).then(() => {
+          navigate("/customers");
+        });
       }
     });
   };
+
+  function buscar(id) {
+    //get inspectors
+    fetch("http://devcompuservi.ddns.net:8080/customer/find?id=" + id)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (result.status === 400) {
+            swal("Empty", "Introduzca el id", "warning");
+          }
+
+          document.getElementById("inputCusType").value = result.idCustomerType;
+          document.getElementById("inputBusName").value = result.businessName;
+          document.getElementById("InputFirstName").value = result.firstName;
+          document.getElementById("InputLastName").value = result.lastName;
+          document.getElementById("InputPhone").value = result.phone;
+          document.getElementById("InputAddress").value = result.address;
+          document.getElementById("InputCity").value = result.idCity;
+          document.getElementById("InputState").value = result.idState;
+          document.getElementById("InputEmail").value = result.email;
+          document.getElementById("inputZip").value = result.zipCode;
+          document.getElementById("InputSalvagePrice").value =
+            result.salvagePrice;
+          document.getElementById("InputEmissionPrice").value =
+            result.emissionPrice;
+          edit = result.idCustomer;
+
+          if (edit > 0) {
+            setType(result.idCustomerType);
+            setBusName(result.businessName);
+            setFname(result.firstName);
+            setLname(result.lastName);
+            setPhone(result.phone);
+            setAddress(result.address);
+            setCity(result.idCity);
+            setEmail(result.email);
+            setZipCode(result.zipCode);
+            setState(result.idState);
+            setSalvagePrice(result.salvagePrice);
+            setEmissionPrice(result.emissionPrice);
+          }
+        },
+        (error) => {
+          swal("Undefined", "not exist", "warning");
+        }
+      );
+  }
+
+  let [inputSearch, setInputSearch] = useState("");
 
   return (
     <div className="App">
@@ -122,6 +176,27 @@ function FormCustomers() {
       >
         <div className="col-md-11 container card shadow-lg bg-white mt-5">
           <h1>Customer</h1>
+          <div className="row">
+            <div className="col-md-4 mt-2">
+              <input
+                type="text"
+                className="form-control"
+                onChange={(e) => setInputSearch(e.target.value)}
+                id="inputSearch"
+                placeholder="Introduce el id..."
+              />
+            </div>
+            <div className="col-md-1 mt-2">
+              {" "}
+              <button
+                className="btn btn-outline-success"
+                type="button"
+                onClick={() => buscar(inputSearch)}
+              >
+                Search
+              </button>
+            </div>
+          </div>
           <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
             <div className="col-md-6">
               <div className="col-md-3">
@@ -130,6 +205,7 @@ function FormCustomers() {
                 </label>
               </div>
               <select
+                id="inputCusType"
                 className="form-select input1"
                 defaultValue={"Hola"}
                 onChange={(e) => setType(e.target.value)}
@@ -150,6 +226,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="inputBusName"
                 className="input1 form-control"
                 onChange={(e) => setBusName(e.target.value)}
               />
@@ -162,6 +239,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputFirstName"
                 className="input1 form-control"
                 onChange={(e) => setFname(e.target.value)}
               />
@@ -174,6 +252,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputLastName"
                 className="input1 form-control"
                 onChange={(e) => setLname(e.target.value)}
               />
@@ -186,6 +265,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputPhone"
                 className="input1 form-control"
                 onChange={(e) => setPhone(e.target.value)}
               />
@@ -198,6 +278,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputAddress"
                 className="input1 form-control"
                 onChange={(e) => setAddress(e.target.value)}
               />
@@ -209,6 +290,7 @@ function FormCustomers() {
                 </label>
               </div>
               <select
+                id="InputCity"
                 className="form-select input1"
                 defaultValue={"Hola"}
                 onChange={(e) => setCity(e.target.value)}
@@ -228,6 +310,7 @@ function FormCustomers() {
                 </label>
               </div>
               <select
+                id="InputState"
                 className="input1 form-select"
                 defaultValue={"Hola"}
                 onChange={(e) => setState(e.target.value)}
@@ -248,6 +331,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputEmail"
                 className="input1 form-control"
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -261,7 +345,7 @@ function FormCustomers() {
               <input
                 type="text"
                 className="input1 form-control"
-                id="inputZi"
+                id="inputZip"
                 onChange={(e) => setZipCode(e.target.value)}
               />
             </div>
@@ -273,6 +357,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputSalvagePrice"
                 className="input1 form-control"
                 onChange={(e) => setSalvagePrice(e.target.value)}
               />
@@ -285,6 +370,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
+                id="InputEmissionPrice"
                 className="input1 form-control"
                 onChange={(e) => setEmissionPrice(e.target.value)}
               />

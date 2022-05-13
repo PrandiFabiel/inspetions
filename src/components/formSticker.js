@@ -1,10 +1,11 @@
 import { useState } from "react";
-
+import swal from "sweetalert";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
 const FormSticker = () => {
   const [sticker, setSticker] = useState("");
+  const navigate = useNavigate(); 
 
   const submit = (e) => {
     console.log(sticker);
@@ -14,8 +15,18 @@ const FormSticker = () => {
       body: JSON.stringify({ stickerNumber: sticker }),
       headers: { "Content-Type": "application/json" },
     })
-      .then((res) => res.json())
-      .then((json) => setSticker(json.colors));
+      .then((res) => {
+        res.json()
+        if (res.ok === true) {
+          swal({
+            title: "Guardado!",
+            text: "Guardado correctamente!",
+            icon: "success",
+          }).then(() => {
+            navigate("/listStickers");
+          });
+        }
+      });
   };
 
   return (
