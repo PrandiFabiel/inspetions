@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/formServices.css";
 import swal from "sweetalert";
 function FormInpectors() {
   const [itemsCity, setItemsCity] = useState([]);
   const [itemsState, setItemsState] = useState([]);
+  const navigate = useNavigate();
 
   //get ciudades
   useEffect(() => {
@@ -48,6 +49,7 @@ function FormInpectors() {
   const [ZipCode, setZipCode] = useState("");
   const [Comiss, setComiss] = useState("");
   const [InspectorID, setInspectorID] = useState("");
+  let StateEdit = 0;
 
   const submit = (e) => {
     console.log(
@@ -66,6 +68,7 @@ function FormInpectors() {
     fetch("http://devcompuservi.ddns.net:8080/inspector/save", {
       method: "POST",
       body: JSON.stringify({
+        idInspector: inputSearch,
         firstName: Fname,
         lastName: Lname,
         inspectorId: InspectorID,
@@ -82,14 +85,71 @@ function FormInpectors() {
       res.json();
       console.log(res.ok);
       if (res.ok === true) {
-        swal("Guardado", "Guardado correctamente!", "success");
-        let formulario = document.getElementById("formul");
-        formulario.reset();
-      } else {
-        swal("Error", "Ha ocurrido un error, intente rellenar los campos.", "error");
+        swal({
+          title: "Guardado!",
+          text: "Guardado correctamente!",
+          icon: "success",
+        }).then(() => {
+          //window.location.reload();
+          navigate("/inpectors");
+        });
       }
     });
   };
+
+  function buscar(id) {
+    //get inspectors
+    fetch("http://devcompuservi.ddns.net:8080/inspector/find?id=" + id)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (result.status === 400) {
+            swal("Empty", "Introduzca el id", "warning");
+          }
+
+          let inputFisrtName = document.getElementById("InputFirstName");
+          let inputLastName = document.getElementById("InputLastName");
+          let inputInspectorID = document.getElementById("InputInspectorID");
+          let inputPhone = document.getElementById("InputPhone");
+          let inputAddress = document.getElementById("InputAddress");
+          let inputCity = document.getElementById("InputCity");
+          let inputState = document.getElementById("InputState");
+          let inputEmail = document.getElementById("InputEmail");
+          let inputZip = document.getElementById("inputZip");
+          let inputCommission = document.getElementById("InputCommission");
+
+          inputFisrtName.value = result.firstName;
+          inputLastName.value = result.lastName;
+          inputInspectorID.value = result.inspectorId;
+          inputPhone.value = result.phone;
+          inputAddress.value = result.address;
+          inputCity.value = result.idCity;
+          inputEmail.value = result.email;
+          inputZip.value = result.zipCode;
+          inputCommission.value = result.commission;
+          inputState.value = result.idState;
+          StateEdit = result.idState;
+
+          if (StateEdit > 0) {
+            setFname(result.firstName);
+            setLname(result.lastName);
+            setPhone(result.phone);
+            setInspectorID(result.inspectorId);
+            setAddress(result.address);
+            setCity(result.idCity);
+            setEmail(result.email);
+            setZipCode(result.zipCode);
+            setComiss(result.commission); 
+            setState(StateEdit);
+          }
+        },
+        (error) => {
+          swal("Undefined", "not exist", "warning");
+        }
+      );
+  }
+
+  let [inputSearch, setInputSearch] = useState("");
 
   return (
     <div className="App">
@@ -100,6 +160,27 @@ function FormInpectors() {
       >
         <div className="col-md-11 container card shadow-lg bg-white mt-5">
           <h1>Inspector</h1>
+          <div className="row">
+                <div className="col-md-4 mt-2">
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => setInputSearch(e.target.value)}
+                    id="inputSearch"
+                    placeholder="Introduce el id..."
+                  />
+                </div>
+                <div className="col-md-1 mt-2">
+                  {" "}
+                  <button
+                    className="btn btn-outline-success"
+                    type="button"
+                    onClick={() => buscar(inputSearch)}
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
           <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
             <div className="col-md-6">
               <div className="col-md-3">
@@ -110,6 +191,7 @@ function FormInpectors() {
               <input
                 type="text"
                 className="input1 form-control"
+                id="InputFirstName"
                 onChange={(e) => setFname(e.target.value)}
               />
             </div>
@@ -122,6 +204,7 @@ function FormInpectors() {
               <input
                 type="text"
                 className="input1 form-control"
+                id="InputLastName"
                 onChange={(e) => setLname(e.target.value)}
               />
             </div>
@@ -135,6 +218,7 @@ function FormInpectors() {
                 type="text"
                 className="input1 form-control"
                 onChange={(e) => setInspectorID(e.target.value)}
+                id="InputInspectorID"
               />
             </div>
             <div className="col-md-6">
@@ -147,6 +231,7 @@ function FormInpectors() {
                 type="text"
                 className="input1 form-control"
                 onChange={(e) => setPhone(e.target.value)}
+                id="InputPhone"
               />
             </div>
             <div className="col-md-6">
@@ -159,6 +244,7 @@ function FormInpectors() {
                 type="text"
                 className="input1 form-control"
                 onChange={(e) => setAddress(e.target.value)}
+                id="InputAddress"
               />
             </div>
             <div className="col-md-6">
@@ -168,6 +254,7 @@ function FormInpectors() {
                 </label>
               </div>
               <select
+                id="InputCity"
                 className="form-select input1"
                 defaultValue={"Hola"}
                 onChange={(e) => setCity(e.target.value)}
@@ -187,6 +274,7 @@ function FormInpectors() {
                 </label>
               </div>
               <select
+                id="InputState"
                 className="input1 form-select"
                 defaultValue={"Hola"}
                 onChange={(e) => setState(e.target.value)}
@@ -208,6 +296,7 @@ function FormInpectors() {
               <input
                 type="text"
                 className="input1 form-control"
+                id="InputEmail"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -220,7 +309,7 @@ function FormInpectors() {
               <input
                 type="text"
                 className="input1 form-control"
-                id="inputZi"
+                id="inputZip"
                 onChange={(e) => setZipCode(e.target.value)}
               />
             </div>
@@ -233,6 +322,7 @@ function FormInpectors() {
               <input
                 type="text"
                 className="input1 form-control"
+                id="InputCommission"
                 onChange={(e) => setComiss(e.target.value)}
               />
             </div>

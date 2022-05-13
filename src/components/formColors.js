@@ -1,10 +1,11 @@
 import { useState } from "react";
 import swal from "sweetalert";
 import BarraSuperior from "./barraSuperior";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
 const FormColor = () => {
   const [colors, setColors] = useState(" ");
+  const navigate = useNavigate();
 
   const submit = (e) => {
     console.log(colors);
@@ -20,28 +21,25 @@ const FormColor = () => {
       res.json();
       console.log(res.ok);
       if (res.ok === true) {
-        swal("Guardado", "Guardado correctamente!", "success");
-        let formulario = document.getElementById("formul");
-        formulario.reset();
-      } else {
-        swal(
-          "Error",
-          "Ha ocurrido un error, intente rellenar los campos.",
-          "error"
-        );
+        swal({
+          title: "Guardado!",
+          text: "Guardado correctamente!",
+          icon: "success",
+        }).then(() => {
+          //window.location.reload();
+          navigate("/listColors");
+        });
       }
     });
   };
 
-  const [items, setItems] = useState({ name: " " });
-
+  
   function say(id) {
     //get colors
     fetch("http://devcompuservi.ddns.net:8080/color/find?id=" + id)
       .then((res) => res.json())
       .then(
         (result) => {
-          setItems(result);
           if (result.status === 400) {
             swal("Empty", "Introduzca el id", "warning");
           }

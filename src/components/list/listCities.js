@@ -56,7 +56,7 @@ function ListCities() {
             </div>
             <div className="col-md-6 mt-2">
               {" "}
-              <button className="btn btn-outline-success" type="button">
+              <button style={{display: "none"}} className="btn btn-outline-success" type="button">
                 Search
               </button>
             </div>
