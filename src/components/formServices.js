@@ -220,7 +220,7 @@ function Form() {
         text: "Guardado correctamente!",
         icon: "success",
       }).then(() => {
-        //navigate("/listServices");
+        navigate("/dashboard");
       });
     });
   };

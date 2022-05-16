@@ -61,7 +61,7 @@ function ListCities() {
       );
   }, []);
 
-  //Post cities
+  //Edit cities
   const [State, setState] = useState("");
   const [Name, setName] = useState("");
   let StateEdit = 0;

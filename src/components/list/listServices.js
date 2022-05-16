@@ -68,6 +68,7 @@ function ListServices() {
       ) {
         return elemento;
       }
+      //return elemento;
     });
     setItemsService(results);
   };
@@ -86,7 +87,7 @@ function ListServices() {
                   className="form-control"
                   value={busqueda}
                   id="inputSearch"
-                  placeholder="Search..."
+                  placeholder="Filter by inspector or customer..."
                   onChange={handleChange}
                 />
               </div>
