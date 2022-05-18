@@ -6,7 +6,7 @@ function ListCities() {
   const [itemsCities, setItemsCities] = useState([]);
   const [tablaCities, setTablaCities] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
-
+ 
   //get cities
   useEffect(() => {
     fetch("http://devcompuservi.ddns.net:8080/city/list")
@@ -87,7 +87,6 @@ function ListCities() {
           icon: "success",
         }).then(() => {
           window.location.reload();
-          //navigate("/dashboard");
         });
       }
     });

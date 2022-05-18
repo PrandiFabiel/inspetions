@@ -3,6 +3,9 @@ import BarraSuperior from "./barraSuperior";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
 import swal from "sweetalert";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+
 function FormCities() {
   const [itemsState, setItemsState] = useState([]);
   const navigate = useNavigate();
@@ -21,19 +24,18 @@ function FormCities() {
         (error) => {}
       );
   }, []);
+ 
+  const options = itemsState.map((op) => ({ id: op.idState, label: op.name}) )
 
   //Post cities
   const [State, setState] = useState("");
   const [Name, setName] = useState("");
-  let StateEdit = 0;
-
   const submit = (e) => {
     console.log(State, Name);
     e.preventDefault();
     fetch("http://devcompuservi.ddns.net:8080/city/save", {
       method: "POST",
       body: JSON.stringify({
-        idCity: inputSearch,
         idState: State,
         name: Name,
       }),
@@ -54,35 +56,6 @@ function FormCities() {
     });
   };
 
-  function buscar(id) {
-    //get cities
-    fetch("http://devcompuservi.ddns.net:8080/city/find?id=" + id)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (result.status === 400) {
-            swal("Empty", "Introduzca el id", "warning");
-          }
-          console.log(result);
-          let inputState = document.getElementById("stateInput");
-          let inputName = document.getElementById("nameInput");
-          inputState.value = result.idState;
-          inputName.value = result.name;
-          StateEdit = result.idState;
-
-          if (StateEdit > 0) {
-            setState(StateEdit);
-            setName(result.name);
-          }
-        },
-        (error) => {
-          swal("Undefined", "not exist", "warning");
-        }
-      );
-  }
-
-  let [inputSearch, setInputSearch] = useState("");
-
   return (
     <div className="divFa">
       <BarraSuperior />
@@ -90,28 +63,7 @@ function FormCities() {
         <div className="col-md-11 container mt-5">
           <div className="row">
             <h1 className="offset-5">City</h1>
-            <div className="col-md-11 container card shadow-lg bg-white mt-5">
-              <div className="row">
-                <div className="col-md-6 mt-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    onChange={(e) => setInputSearch(e.target.value)}
-                    id="inputSearch"
-                    placeholder="Introduce el id..."
-                  />
-                </div>
-                <div className="col-md-6 mt-2">
-                  {" "}
-                  <button
-                    className="btn btn-outline-success"
-                    type="button"
-                    onClick={() => buscar(inputSearch)}
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
+            <div className="col-md-8 container card shadow-lg bg-white mt-5">
               <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
                 <div className="col-md-12">
                   <div className="offset-5 divD">
@@ -119,19 +71,21 @@ function FormCities() {
                       State
                     </label>
                   </div>
-                  <select
-                    id="stateInput"
-                    className="input1S form-select"
-                    defaultValue={"Hola"}
-                    onChange={(e) => setState(e.target.value)}
-                  >
-                    <option defaultValue>Select State</option>
-                    {itemsState.map((item) => (
-                      <option key={item.idState} value={item.idState}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div>
+                  <br />
+                  <Autocomplete
+                    onChange={(event, value) => {
+                      setState(value.id);
+                    }}
+                    id="controllable-states-demo"
+                    options={options}
+                    sx={{ width: "100%" }}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select State" />
+                    )}
+                  />
+                </div>
                 </div>
                 <div className="col-md-12">
                   <div className="offset-5 divD">

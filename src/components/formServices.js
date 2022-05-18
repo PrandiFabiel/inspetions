@@ -168,7 +168,6 @@ function Form() {
   const [ServicePaid, setServicePaid] = useState("");
   const [Approved, setApproved] = useState("");
   const [sticker, setSticker] = useState(0);
-  let edit = 0;
 
   const submit = (e) => {
     console.log(
@@ -193,7 +192,6 @@ function Form() {
     fetch("http://devcompuservi.ddns.net:8080/service/save", {
       method: "POST",
       body: JSON.stringify({
-        idService: inputSearch,
         idBrand: Brand,
         idModel: Model,
         idColor: Color,
@@ -225,65 +223,6 @@ function Form() {
     });
   };
 
-  function buscar(id) {
-    //get inspectors
-    fetch("http://devcompuservi.ddns.net:8080/service/find?id=" + id)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (result.status === 400) {
-            swal("Empty", "Introduzca el id", "warning");
-          }
-
-          document.getElementById("inputInspector").value = result.idInspector;
-          //document.getElementById("inputDate").value = result.date;
-          document.getElementById("inputCustomer").value = result.idCustomer;
-          document.getElementById("inputVIN").value = result.vinnumber;
-          document.getElementById("inputVType").value = result.idVehicleType;
-          document.getElementById("inputBrand").value = result.idBrand;
-          document.getElementById("inputYear").value = result.year;
-          document.getElementById("inputModel").value = result.idModel;
-          document.getElementById("inputDrivetrain").value =
-            result.idDrivetrain;
-          document.getElementById("inputColor").value = result.idColor;
-          document.getElementById("inputMiles").value = result.miles;
-          document.getElementById("inputSticker").value = result.idSticker;
-          document.getElementById("inputInspectorType").value =
-            result.idInspectionType;
-          document.getElementById("inputPrice").value = result.price;
-          document.getElementById("inputServicePaid").value =
-            result.servicePaid;
-          document.getElementById("inputInpectionApproved").value =
-            result.inspectionApproved;
-          edit = result.idService;
-
-          if (edit > 0) {
-            console.log("entro");
-            setInspector(result.idInspector);
-            setDate(result.date);
-            setCustomer(result.idCustomer);
-            setVINNumber(result.vinnumber);
-            setVType(result.idVehicleType);
-            setBrand(result.idBrand);
-            setYear(result.year);
-            setModel(result.idModel);
-            setDrivetrain(result.idDrivetrain);
-            setColor(result.idColor);
-            setMilles(result.miles);
-            setSticker(result.idSticker);
-            setInspectionTypeName(result.idInspectionType);
-            setPrice(result.price);
-            setServicePaid(result.ServicePaid);
-            setApproved(result.inspectionApproved);
-          }
-        },
-        (error) => {
-          swal("Undefined", "not exist", "warning");
-        }
-      );
-  }
-
-  let [inputSearch, setInputSearch] = useState("");
 
   return (
     <div className="App">
@@ -294,27 +233,6 @@ function Form() {
       >
         <div className="col-md-11 container card shadow-lg bg-white mt-5">
           <h1>Services</h1>
-          <div className="row">
-            <div className="col-md-4 mt-2">
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setInputSearch(e.target.value)}
-                id="inputSearch"
-                placeholder="Introduce el id..."
-              />
-            </div>
-            <div className="col-md-1 mt-2">
-              {" "}
-              <button
-                className="btn btn-outline-success"
-                type="button"
-                onClick={() => buscar(inputSearch)}
-              >
-                Search
-              </button>
-            </div>
-          </div>
           <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
             <div className="col-md-4">
               <label htmlFor="inputEmail4" className="fs-4 form-label">
