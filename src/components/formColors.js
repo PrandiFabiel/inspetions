@@ -13,7 +13,6 @@ const FormColor = () => {
     fetch("http://devcompuservi.ddns.net:8080/color/save", {
       method: "POST",
       body: JSON.stringify({
-        idColor:inputSearch,
         name: colors,
       }),
       headers: { "Content-Type": "application/json" },
@@ -33,28 +32,6 @@ const FormColor = () => {
     });
   };
 
-  
-  function say(id) {
-    //get colors
-    fetch("http://devcompuservi.ddns.net:8080/color/find?id=" + id)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (result.status === 400) {
-            swal("Empty", "Introduzca el id", "warning");
-          }
-          console.log(result);
-          let input = document.getElementById("colorInput");
-          input.value = result.name;
-        },
-        (error) => {
-          swal("Undefined", "not exist", "warning");
-        }
-      );
-  }
-
-  const [inputSearch, setInputSearch] = useState("");
-
   return (
     <div className="divFa">
       <BarraSuperior />
@@ -63,27 +40,6 @@ const FormColor = () => {
           <div className="row">
             <h1 className="offset-5">Color</h1>
             <div className="col-md-11 container card shadow-lg bg-white mt-5">
-              <div className="row">
-                <div className="col-md-6 mt-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    onChange={(e) => setInputSearch(e.target.value)}
-                    id="inputSearch"
-                    placeholder="Search..."
-                  />
-                </div>
-                <div className="col-md-6 mt-2">
-                  {" "}
-                  <button
-                    className="btn btn-outline-success"
-                    type="button"
-                    onClick={() => say(inputSearch)}
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
               <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
                 <div className="col-md-12">
                   <div className="offset-5 divD">

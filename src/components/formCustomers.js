@@ -3,6 +3,8 @@ import BarraSuperior from "./barraSuperior";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/formServices.css";
 import swal from "sweetalert";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 function FormCustomers() {
   const [itemsCity, setItemsCity] = useState([]);
   const [itemsState, setItemsState] = useState([]);
@@ -67,7 +69,6 @@ function FormCustomers() {
   const [ZipCode, setZipCode] = useState("");
   const [SalvagePrice, setSalvagePrice] = useState("");
   const [EmissionPrice, setEmissionPrice] = useState("");
-  let edit = 0;
 
   const submit = (e) => {
     console.log(
@@ -88,7 +89,6 @@ function FormCustomers() {
     fetch("http://devcompuservi.ddns.net:8080/customer/save", {
       method: "POST",
       body: JSON.stringify({
-        idCustomer: inputSearch,
         idCustomerType: type,
         businessName: BusName,
         firstName: Fname,
@@ -118,54 +118,19 @@ function FormCustomers() {
     });
   };
 
-  function buscar(id) {
-    //get inspectors
-    fetch("http://devcompuservi.ddns.net:8080/customer/find?id=" + id)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          if (result.status === 400) {
-            swal("Empty", "Introduzca el id", "warning");
-          }
-
-          document.getElementById("inputCusType").value = result.idCustomerType;
-          document.getElementById("inputBusName").value = result.businessName;
-          document.getElementById("InputFirstName").value = result.firstName;
-          document.getElementById("InputLastName").value = result.lastName;
-          document.getElementById("InputPhone").value = result.phone;
-          document.getElementById("InputAddress").value = result.address;
-          document.getElementById("InputCity").value = result.idCity;
-          document.getElementById("InputState").value = result.idState;
-          document.getElementById("InputEmail").value = result.email;
-          document.getElementById("inputZip").value = result.zipCode;
-          document.getElementById("InputSalvagePrice").value =
-            result.salvagePrice;
-          document.getElementById("InputEmissionPrice").value =
-            result.emissionPrice;
-          edit = result.idCustomer;
-
-          if (edit > 0) {
-            setType(result.idCustomerType);
-            setBusName(result.businessName);
-            setFname(result.firstName);
-            setLname(result.lastName);
-            setPhone(result.phone);
-            setAddress(result.address);
-            setCity(result.idCity);
-            setEmail(result.email);
-            setZipCode(result.zipCode);
-            setState(result.idState);
-            setSalvagePrice(result.salvagePrice);
-            setEmissionPrice(result.emissionPrice);
-          }
-        },
-        (error) => {
-          swal("Undefined", "not exist", "warning");
-        }
-      );
-  }
-
-  let [inputSearch, setInputSearch] = useState("");
+  //Options to autocomplete
+  const optionsCusType = itemsCusType.map((op) => ({
+    id: op.idCustomerType,
+    label: op.name,
+  }));
+  const optionsState = itemsState.map((op) => ({
+    id: op.idState,
+    label: op.name,
+  }));
+  const optionsCity = itemsCity.map((op) => ({
+    id: op.idCity,
+    label: op.name,
+  }));
 
   return (
     <div className="App">
@@ -176,27 +141,6 @@ function FormCustomers() {
       >
         <div className="col-md-11 container card shadow-lg bg-white mt-5">
           <h1>Customer</h1>
-          <div className="row">
-            <div className="col-md-4 mt-2">
-              <input
-                type="text"
-                className="form-control"
-                onChange={(e) => setInputSearch(e.target.value)}
-                id="inputSearch"
-                placeholder="Introduce el id..."
-              />
-            </div>
-            <div className="col-md-1 mt-2">
-              {" "}
-              <button
-                className="btn btn-outline-success"
-                type="button"
-                onClick={() => buscar(inputSearch)}
-              >
-                Search
-              </button>
-            </div>
-          </div>
           <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
             <div className="col-md-6">
               <div className="col-md-3">
@@ -204,19 +148,23 @@ function FormCustomers() {
                   Customer Type
                 </label>
               </div>
-              <select
-                id="inputCusType"
-                className="form-select input1"
-                defaultValue={"Hola"}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <option defaultValue>Select Customer Type</option>
-                {itemsCusType.map((item) => (
-                  <option key={item.idCustomerType} value={item.idCustomerType}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setType(value.id);
+                  }}
+                  id="inputCusType"
+                  options={optionsCusType}
+                  sx={{ width: "100%" }}
+                  size={"small"}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Customer Type" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-3">
@@ -227,7 +175,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="inputBusName"
-                className="input1 form-control"
+                className="form-control"
                 onChange={(e) => setBusName(e.target.value)}
               />
             </div>
@@ -240,7 +188,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputFirstName"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setFname(e.target.value)}
               />
             </div>
@@ -253,7 +201,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputLastName"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setLname(e.target.value)}
               />
             </div>
@@ -266,7 +214,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputPhone"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
@@ -279,7 +227,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputAddress"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
@@ -289,19 +237,23 @@ function FormCustomers() {
                   City
                 </label>
               </div>
-              <select
-                id="InputCity"
-                className="form-select input1"
-                defaultValue={"Hola"}
-                onChange={(e) => setCity(e.target.value)}
-              >
-                <option defaultValue>Select City</option>
-                {itemsCity.map((item) => (
-                  <option key={item.idCity} value={item.idCity}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setCity(value.id);
+                  }}
+                  id="inputCity"
+                  options={optionsCity}
+                  sx={{ width: "100%" }}
+                  size={"small"}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select City" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -309,19 +261,23 @@ function FormCustomers() {
                   State
                 </label>
               </div>
-              <select
-                id="InputState"
-                className="input1 form-select"
-                defaultValue={"Hola"}
-                onChange={(e) => setState(e.target.value)}
-              >
-                <option defaultValue>Select State</option>
-                {itemsState.map((item) => (
-                  <option key={item.idState} value={item.idState}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setState(value.id);
+                  }}
+                  id="inputState"
+                  options={optionsState}
+                  sx={{ width: "100%" }}
+                  size={"small"}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select State" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -332,7 +288,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputEmail"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -344,7 +300,7 @@ function FormCustomers() {
               </div>
               <input
                 type="text"
-                className="input1 form-control"
+                className="  form-control"
                 id="inputZip"
                 onChange={(e) => setZipCode(e.target.value)}
               />
@@ -358,7 +314,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputSalvagePrice"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setSalvagePrice(e.target.value)}
               />
             </div>
@@ -371,7 +327,7 @@ function FormCustomers() {
               <input
                 type="text"
                 id="InputEmissionPrice"
-                className="input1 form-control"
+                className="  form-control"
                 onChange={(e) => setEmissionPrice(e.target.value)}
               />
             </div>

@@ -4,7 +4,8 @@ import "../css/dash.css";
 function Dashboard() {
   const [pendingEarning, setIPendingEarning] = useState([]);
   const [inpectorsMonth, setInpectorsmMonth] = useState([]);
-  const [servicesToCustomers, setServicesTocustomers] = useState([]); 
+  const [servicesToCustomers, setServicesTocustomers] = useState([]);
+  const [stickerAvailable, setStickerAvailable] = useState([]); 
 
   //get inspector
   useEffect(() => {
@@ -41,11 +42,25 @@ function Dashboard() {
         .then(
           (result) => {
             setServicesTocustomers(result);
-            console.log(result);
           },
           (error) => {}
         );
     }, []);
+
+        //get inspections inpectors per month
+        useEffect(() => {
+          fetch(
+            "http://devcompuservi.ddns.net:8080/sticker/getavailablestickers"
+          )
+            .then((res) => res.json())
+            .then(
+              (result) => {
+                setStickerAvailable(result);
+              },
+              (error) => {}
+            );
+        }, []);
+    
 
   return (
     <div className="divFa">
@@ -54,7 +69,7 @@ function Dashboard() {
         <div className="col-md-11 container mt-5">
           <div className="row">
             <h1 className="col-md-10">Dashboard</h1>
-            <div className="col-md-4 mt-4">
+            <div className="col-md-3 mt-4">
               <div
                 className="card shadow-lg text-white bg-danger mb-3"
                 style={{ maxWidth: "100%" }}
@@ -66,7 +81,7 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="col-md-4 mt-4">
+            <div className="col-md-3 mt-4">
               <div
                 className="card shadow-lg text-white bg-success mb-3"
                 style={{ maxWidth: "100%" }}
@@ -78,7 +93,7 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="col-md-4 mt-4">
+            <div className="col-md-3 mt-4">
               <div
                 className="card shadow-lg text-white bg-info mb-3"
                 style={{ maxWidth: "100%" }}
@@ -91,6 +106,18 @@ function Dashboard() {
                   <h5 className="card-title">
                     Total Earning: ${pendingEarning.income}
                   </h5>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3 mt-4">
+              <div
+                className="card shadow-lg text-white bg-info mb-3"
+                style={{ maxWidth: "100%" }}
+              >
+                <div className="card-header">Sticker Available</div>
+                <div className="card-body">
+                  <h5 className="card-title">{stickerAvailable.value}</h5>
+                  <h5 className="text-info">.</h5>
                 </div>
               </div>
             </div>

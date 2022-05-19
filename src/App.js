@@ -38,7 +38,7 @@ function App() {
     <div style={{ display: "flex", overflowY: "hidden"}}>
       <BrowserRouter>
         <Sidebar />
-          <Routes>
+          <Routes> 
             <Route path="/" element={<Principal/>} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/services" element={<Form />} />

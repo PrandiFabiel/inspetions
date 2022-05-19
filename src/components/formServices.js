@@ -3,6 +3,8 @@ import BarraSuperior from "./barraSuperior";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/formServices.css";
 import swal from "sweetalert";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 function Form() {
   const [itemsinspector, setItemsinspector] = useState([]);
   const [itemsCustomer, setItemsCustomer] = useState([]);
@@ -13,6 +15,52 @@ function Form() {
   const [itemsColor, setItemsColor] = useState([]);
   const [itemsinspectorType, setItemsinspectorType] = useState([]);
   const [itemsSticker, setItemsSticker] = useState([]);
+
+  //options to autocomplete
+  const optionsInspectors = itemsinspector.map((op) => ({
+    id: op.idInspector,
+    label: op.firstName + " " + op.lastName,
+  }));
+
+  const optionsCustomer = itemsCustomer.map((op) => ({
+    id: op.idCustomer,
+    label: op.firstName + " " + op.lastName,
+  }));
+
+  const optionsVTYpe = itemsVType.map((op) => ({
+    id: op.idVehicleType,
+    label: op.name,
+  }));
+
+  const optionsBrands = itemsBrand.map((op) => ({
+    id: op.idBrand,
+    label: op.name
+  }));
+
+  const optionsModel = itemsModel.map((op) => ({
+    id: op.idModel,
+    label: op.name
+  }));
+
+  const optionsDrive = itemsDrive.map((op) => ({
+    id: op.idDrivetrain,
+    label: op.name
+  }));
+
+  const optionsColor = itemsColor.map((op) => ({
+    id: op.idColor,
+    label: op.name
+  }));
+
+  const optionsInspectorType = itemsinspectorType.map((op) => ({
+    id: op.idInspectionType,
+    label: op.name
+  }));
+
+  const optionsSticker = itemsSticker.map((op) => ({
+    id: op.idSticker,
+    label: op.stickerNumber
+  }));
 
   const navigate = useNavigate();
 
@@ -223,7 +271,6 @@ function Form() {
     });
   };
 
-
   return (
     <div className="App">
       <BarraSuperior />
@@ -238,19 +285,24 @@ function Form() {
               <label htmlFor="inputEmail4" className="fs-4 form-label">
                 Inpector
               </label>
-              <select
-                id="inputInspector"
-                className="form-select ip1"
-                defaultValue={"Hola"}
-                onChange={(e) => setInspector(e.target.value)}
-              >
-                <option defaultValue>Select Inpector</option>
-                {itemsinspector.map((item) => (
-                  <option key={item.idInspector} value={item.idInspector}>
-                    {item.firstName}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setInspector(value.id);
+                  }}
+                  id="inputInspector"
+                  options={optionsInspectors}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Inpector" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-4">
               <label htmlFor="inputEmail4" className="fs-4 form-label">
@@ -259,7 +311,7 @@ function Form() {
               <input
                 type="date"
                 id="inputDate"
-                className="form-control ip1"
+                className="form-control ip1 mt-4"
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
@@ -267,18 +319,24 @@ function Form() {
               <label htmlFor="inputEmail4" className="fs-4 form-label">
                 Customer
               </label>
-              <select
-                id="inputCustomer"
-                className="form-select ip1"
-                onChange={(e) => setCustomer(e.target.value)}
-              >
-                <option defaultValue>Select Customer</option>
-                {itemsCustomer.map((item) => (
-                  <option key={item.idCustomer} value={item.idCustomer}>
-                    {item.firstName}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setCustomer(value.id);
+                  }}
+                  id="inputCustomer"
+                  options={optionsCustomer}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Customer" />
+                  )}
+                />
+              </div>
             </div>
             <hr></hr>
             <h1>Vehicle</h1>
@@ -291,7 +349,7 @@ function Form() {
 
               <input
                 type="text"
-                className="form-control"
+                className="form-control mt-4"
                 id="inputVIN"
                 onChange={(e) => setVINNumber(e.target.value)}
               />
@@ -302,19 +360,24 @@ function Form() {
                   Type
                 </label>
               </div>
-              <select
-                id="inputVType"
-                className="form-select"
-                defaultValue={"Hola"}
-                onChange={(e) => setVType(e.target.value)}
-              >
-                <option defaultValue>Select Type</option>
-                {itemsVType.map((item) => (
-                  <option key={item.idVehicleType} value={item.idVehicleType}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setVType(value.id);
+                  }}
+                  id="inputVType"
+                  options={optionsVTYpe}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Type" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -322,19 +385,24 @@ function Form() {
                   Brand
                 </label>
               </div>
-              <select
-                id="inputBrand"
-                className="form-select"
-                defaultValue={"Hola"}
-                onChange={(e) => setBrand(e.target.value)}
-              >
-                <option defaultValue>Select Brand</option>
-                {itemsBrand.map((item) => (
-                  <option key={item.idBrand} value={item.idBrand}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setBrand(value.id);
+                  }}
+                  id="inputBrand"
+                  options={optionsBrands}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Brand" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -344,7 +412,7 @@ function Form() {
               </div>
               <input
                 type="text"
-                className="form-control"
+                className="form-control mt-4"
                 id="inputYear"
                 onChange={(e) => setYear(e.target.value)}
               />
@@ -355,19 +423,24 @@ function Form() {
                   Model
                 </label>
               </div>
-              <select
-                className="form-select"
-                defaultValue={"Hola"}
-                id="inputModel"
-                onChange={(e) => setModel(e.target.value)}
-              >
-                <option defaultValue>Select Model</option>
-                {itemsModel.map((item) => (
-                  <option key={item.idModel} value={item.idModel}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setModel(value.id);
+                  }}
+                  id="inputModel"
+                  options={optionsModel}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Model" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -375,19 +448,24 @@ function Form() {
                   Drivetrain
                 </label>
               </div>
-              <select
-                className="form-select"
-                defaultValue={"Hola"}
-                id="inputDrivetrain"
-                onChange={(e) => setDrivetrain(e.target.value)}
-              >
-                <option defaultValue>Select Drivetrain</option>
-                {itemsDrive.map((item) => (
-                  <option key={item.idDrivetrain} value={item.idDrivetrain}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setDrivetrain(value.id);
+                  }}
+                  id="inputDrivetrain"
+                  options={optionsDrive}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Drivetrain" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -395,19 +473,24 @@ function Form() {
                   Color
                 </label>
               </div>
-              <select
-                className="form-select"
-                defaultValue={"Hola"}
-                id="inputColor"
-                onChange={(e) => setColor(e.target.value)}
-              >
-                <option defaultValue>Select Color</option>
-                {itemsColor.map((item) => (
-                  <option key={item.idColor} value={item.idColor}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setColor(value.id);
+                  }}
+                  id="inputColor"
+                  options={optionsColor}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Color" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -417,7 +500,7 @@ function Form() {
               </div>
               <input
                 type="text"
-                className="form-control"
+                className="form-control mt-4"
                 id="inputMiles"
                 onChange={(e) => setMilles(e.target.value)}
               />
@@ -428,19 +511,24 @@ function Form() {
                   Sticker
                 </label>
               </div>
-              <select
-                className="form-select"
-                defaultValue={"Hola"}
-                id="inputSticker"
-                onChange={(e) => setSticker(e.target.value)}
-              >
-                <option defaultValue>Select Sticker</option>
-                {itemsSticker.map((item) => (
-                  <option key={item.idSticker} value={item.idSticker}>
-                    {item.stickerNumber}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setSticker(value.id);
+                  }}
+                  id="inputSticker"
+                  options={optionsSticker}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Sticker" />
+                  )}
+                />
+              </div>
             </div>
             <h1>Inpector</h1>
             <hr></hr>
@@ -450,22 +538,24 @@ function Form() {
                   Type
                 </label>
               </div>
-              <select
-                className="form-select"
-                defaultValue={"Hola"}
-                id="inputInspectorType"
-                onChange={(e) => setInspectionTypeName(e.target.value)}
-              >
-                <option defaultValue>Select Inpection Type</option>
-                {itemsinspectorType.map((item) => (
-                  <option
-                    key={item.idInspectionType}
-                    value={item.idInspectionType}
-                  >
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setInspectionTypeName(value.id);
+                  }}
+                  id="inputInspectorType"
+                  options={optionsInspectorType}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Inspection Type" />
+                  )}
+                />
+              </div>
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -475,7 +565,7 @@ function Form() {
               </div>
               <input
                 type="text"
-                className="form-control"
+                className="form-control mt-4"
                 id="inputPrice"
                 onChange={(e) => setPrice(e.target.value)}
               />

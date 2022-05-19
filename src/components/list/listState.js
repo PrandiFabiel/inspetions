@@ -1,22 +1,102 @@
 import { useState, useEffect } from "react";
 import BarraSuperior from "../barraSuperior";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
 function ListState() {
-
   const [itemsState, setItemsState] = useState([]);
- 
-  //get cities
+
+  //get state
   useEffect(() => {
     fetch("http://devcompuservi.ddns.net:8080/state/list")
       .then((res) => res.json())
       .then(
         (result) => {
           setItemsState(result);
+          setTablaState(result);
         },
         (error) => {}
       );
   }, []);
-  
+
+  //Edit state
+  const [Name, setName] = useState("");
+  let edited = 0;
+
+  const edit = (e) => {
+    console.log(Name);
+    e.preventDefault();
+    fetch("http://devcompuservi.ddns.net:8080/state/save", {
+      method: "POST",
+      body: JSON.stringify({
+        idState: inputSearch,
+        name: Name,
+      }),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      res.json();
+      console.log(res.ok);
+      if (res.ok === true) {
+        swal({
+          title: "Edited!",
+          text: "Successfully Edited!",
+          icon: "success",
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    });
+  };
+
+  function buscar(id) {
+    //get cities
+    fetch("http://devcompuservi.ddns.net:8080/state/find?id=" + id)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (result.status === 400) {
+            swal("Empty", "Introduzca el id", "warning");
+          }
+          console.log(result);
+
+          let inputName = document.getElementById("nameInput");
+          inputName.value = result.name;
+          edited = result.idState;
+
+          if (edited > 0) {
+            setName(result.name);
+          }
+        },
+        (error) => {
+          swal("Undefined", "not exist", "warning");
+        }
+      );
+  }
+
+  let [inputSearch, setInputSearch] = useState("");
+
+  //filtrar
+  const [tablaState, setTablaState] = useState([]);
+  const [busqueda, setBusqueda] = useState([]);
+
+  const handleChange = (e) => {
+    setBusqueda(e.target.value);
+    filtrar(e.target.value);
+  };
+
+  const filtrar = (terminoBusqueda) => {
+    var results = tablaState.filter((elemento) => {
+      if (
+        elemento.name
+          .toString()
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase())
+      ) {
+        return elemento;
+      }
+    });
+    setItemsState(results);
+  };
+
   return (
     <div className="divFa">
       <BarraSuperior />
@@ -24,8 +104,30 @@ function ListState() {
         <div className="col-md-11 container mt-5">
           <div className="row">
             <h1 className="col-md-10">State</h1>
+          </div>
+          <div className="row">
+            <div className="col-md-4 mt-2">
+              <input
+                type="text"
+                className="form-control"
+                value={busqueda}
+                id="inputSearch"
+                placeholder="Search..."
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-md-6 mt-2">
+              {" "}
+              <button
+                style={{ display: "none" }}
+                className="btn btn-outline-success"
+                type="button"
+              >
+                Search
+              </button>
+            </div>
             <div className="col-md-2">
-              <Link to="/state">
+              <Link to="/listState">
                 <button type="button" className="btn bt">
                   <span className="icon">
                     <i className="bi bi-plus"></i>
@@ -34,23 +136,87 @@ function ListState() {
               </Link>
             </div>
           </div>
- 
           <div className="table-responsive table-wrapper">
             <table className=" table table-striped bg-white">
               <thead className="">
                 <tr>
-                  <th scope="col" >State</th>
+                  <th scope="col">State</th>
                 </tr>
               </thead>
               <tbody>
                 {itemsState.map((item) => (
                   <tr key={item.idState}>
-                    <td>{item.name}</td>
+                    <td
+                      data-bs-target="#exampleModal"
+                      data-bs-toggle="modal"
+                      onClick={() => {
+                        buscar(item.idState);
+                        setInputSearch(item.idState);
+                      }}
+                    >
+                      {item.name}
+                    </td>
                   </tr>
                 ))}
-
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+      {/* Modal */}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
+                Edit State
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form className="row g-3 mt-2 mb-3 ms-3 me-3" id="formul">
+                <div className="col-md-12">
+                  <div className="offset-5 divD">
+                    <label htmlFor="inputEmail4" className="form-label">
+                      Name
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    className="input1S form-control"
+                    id="nameInput"
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={edit}
+                    type="button"
+                    data-bs-dismiss="modal"
+                    className="btn btn-primary"
+                  >
+                    Save changes
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

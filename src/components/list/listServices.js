@@ -1,14 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BarraSuperior from "../barraSuperior";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 function ListServices() {
   const [itemsService, setItemsService] = useState([]);
   const [tablaService, setTablaService] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
   const [busquedaBySticker, setBusquedaBySticker] = useState([]);
 
-  //get cities
+  //referencias
+  const inspectorRef = useRef(); 
+  
+  //get services
   useEffect(() => {
     fetch("http://devcompuservi.ddns.net:8080/service/list")
       .then((res) => res.json())
@@ -94,7 +99,7 @@ function ListServices() {
   const [Approved, setApproved] = useState("");
   const [sticker, setSticker] = useState(0);
   let edited = 0;
-
+  
   const edit = (e) => {
     console.log(
       ServicePaid,
@@ -136,6 +141,10 @@ function ListServices() {
     });
   };
 
+  const options = ['Option 1', 'Option 2'];
+
+  
+
   function buscar(id) {
     //get inspectors
     fetch("http://devcompuservi.ddns.net:8080/service/find?id=" + id)
@@ -146,7 +155,7 @@ function ListServices() {
             swal("Empty", "Introduzca el id", "warning");
           }
 
-          document.getElementById("inputInspector").value = result.idInspector;
+          setValue(result.inspectorName);
           //document.getElementById("inputDate").value = result.date;
           document.getElementById("inputCustomer").value = result.idCustomer;
           document.getElementById("inputVIN").value = result.vinnumber;
@@ -339,6 +348,15 @@ function ListServices() {
         (error) => {}
       );
   }, []);
+
+  
+  //options to autocomplete
+  const optionsInspectors = itemsinspector.map((op) => ({
+    id: op.idInspector,
+    label: op.firstName + " " + op.lastName,
+  }));
+
+  const [value, setValue] = useState(options[0])
 
   return (
     <div className="divFa">
@@ -581,7 +599,7 @@ function ListServices() {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">
-                Edit City
+                Edit Service
               </h5>
               <button
                 type="button"
@@ -596,19 +614,26 @@ function ListServices() {
                   <label htmlFor="inputEmail4" className="fs-4 form-label">
                     Inpector
                   </label>
-                  <select
-                    id="inputInspector"
-                    className="form-select ip1"
-                    defaultValue={"Hola"}
-                    onChange={(e) => setInspector(e.target.value)}
-                  >
-                    <option defaultValue>Select Inpector</option>
-                    {itemsinspector.map((item) => (
-                      <option key={item.idInspector} value={item.idInspector}>
-                        {item.firstName}
-                      </option>
-                    ))}
-                  </select>
+                  <div>
+                <br />
+                <Autocomplete
+                  onChange={(event, value) => {
+                    setInspector(value.id);
+                  }}
+                  //id="inputInspector"
+                  ref={inspectorRef}
+                  value={value}
+                  options={optionsInspectors}
+                  sx={{ width: "100%" }}
+                  size={'small'}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Inpector" />
+                  )}
+                />
+              </div>
                 </div>
                 <div className="col-md-4">
                   <label htmlFor="inputEmail4" className="fs-4 form-label">
