@@ -171,7 +171,7 @@ function ListDriveTrain() {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">
-                Edit Brand
+                Edit Drivetrain
               </h5>
               <button
                 type="button"

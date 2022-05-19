@@ -171,7 +171,7 @@ function ListStickers() {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">
-                Edit Color
+                Edit Sticker
               </h5>
               <button
                 type="button"
