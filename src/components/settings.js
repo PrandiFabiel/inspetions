@@ -34,13 +34,13 @@ function Settings() {
                 </button>
               </Link>
             </div>
-            <div className="col-md-6 mt-4">
+            {/* <div className="col-md-6 mt-4">
               <Link to="/inpectType">
                 <button type="button" className="btn text-dark bt1S">
                   Inspection Type
                 </button>
               </Link>
-            </div>
+            </div> */}
             <h1 className="offset-4 mt-5">Vehicles</h1>
             <div className="col-md-6 mt-4">
               <Link to="/brand">
@@ -81,6 +81,13 @@ function Settings() {
               <Link to="/sticker">
                 <button type="button" className="btn text-dark bt1S">
                 Stickers
+                </button>
+              </Link>
+            </div>
+            <div className="col-md-6 mt-4">
+              <Link to="/stickerGenerator">
+                <button type="button" className="btn text-dark bt1S">
+                StickerGenerator
                 </button>
               </Link>
             </div>

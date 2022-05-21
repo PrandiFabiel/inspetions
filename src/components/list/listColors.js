@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import BarraSuperior from "../barraSuperior";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import  DataAccess  from "../DataAccess";
 function ListColors() {
   const [items, setItems] = useState([]);
 
   //get colors
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/color/list")
+    fetch(`${DataAccess}color/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -25,7 +26,7 @@ function ListColors() {
   const edit = (e) => {
     console.log(Name);
     e.preventDefault();
-    fetch("http://devcompuservi.ddns.net:8080/color/save", {
+    fetch(`${DataAccess}color/save`, {
       method: "POST",
       body: JSON.stringify({
         idColor: inputSearch,

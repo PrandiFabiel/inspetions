@@ -3,9 +3,49 @@ import swal from "sweetalert";
 import BarraSuperior from "./barraSuperior";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/state.css";
+import  DataAccess  from "./DataAccess";
 const FormSticker = () => {
   const [sticker, setSticker] = useState("");
   const navigate = useNavigate(); 
+  
+  //const input = document.getElementById('#txtSticker');
+  
+
+  const saveSticker = async (e) =>{
+    e.preventDefault();
+    const resp = await fetch(`${DataAccess}sticker/save`, {
+      method: "POST",
+      body: JSON.stringify({ 
+        stickerNumber: sticker 
+      }),
+      headers: { "Content-Type": "application/json" },
+    })
+    const confirm = await resp.json();
+
+    if(confirm == 'OK'){
+      const message = await swal({
+        title: "Save!",
+        text: "Save Successfully!",
+        icon: "success",
+        
+      });
+      setSticker('');
+      //message.navigate("/Sticker");
+      
+    }
+    else{
+      const message = await swal({
+        title: "Error",
+        text: `Please fill all the fields! \n ${confirm}`,
+        icon: "error",
+      });
+      setSticker('');
+     // message.navigate("/Sticker");
+  
+    }
+
+    
+  }
 
   const submit = (e) => {
     console.log(sticker);
@@ -46,7 +86,9 @@ const FormSticker = () => {
                   </div>
                   <input
                     type="text"
-                    className="input1S form-control"
+                    className="input1S form-control "
+                    id = "txtSticker"
+                    value = {sticker}
                     onChange={(e) => setSticker(e.target.value)}
                   />
                 </div>
@@ -61,7 +103,7 @@ const FormSticker = () => {
                   <button
                     type="submit"
                     className="text-dark btn btState"
-                    onClick={submit}
+                    onClick={saveSticker}
                   >
                     Save
                   </button>

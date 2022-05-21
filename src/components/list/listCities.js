@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import BarraSuperior from "../barraSuperior";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
+import  DataAccess  from "../DataAccess";
 function ListCities() {
   const [itemsCities, setItemsCities] = useState([]);
   const [tablaCities, setTablaCities] = useState([]);
@@ -9,7 +10,7 @@ function ListCities() {
  
   //get cities
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/city/list")
+    fetch(`${DataAccess}city/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -48,15 +49,12 @@ function ListCities() {
 
   //get estados
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/state/list")
+    fetch(`${DataAccess}state/list`)
       .then((res) => res.json())
       .then(
         (result) => {
           setItemsState(result);
         },
-        // Nota: es importante manejar errores aquí y no en
-        // un bloque catch() para que no interceptemos errores
-        // de errores reales en los componentes.
         (error) => {}
       );
   }, []);
@@ -69,7 +67,7 @@ function ListCities() {
   const edit = (e) => {
     console.log(State, Name);
     e.preventDefault();
-    fetch("http://devcompuservi.ddns.net:8080/city/save", {
+    fetch(`${DataAccess}city/save`, {
       method: "POST",
       body: JSON.stringify({
         idCity: inputSearch,
@@ -94,7 +92,7 @@ function ListCities() {
 
   function buscar(id) {
     //get cities
-    fetch("http://devcompuservi.ddns.net:8080/city/find?id=" + id)
+    fetch(`${DataAccess}city/find?id= ${id}`)
       .then((res) => res.json())
       .then(
         (result) => {

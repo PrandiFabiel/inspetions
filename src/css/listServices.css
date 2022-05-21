@@ -1,0 +1,68 @@
+.table-wrapperService {
+    /*Altura de ejemplo */
+    height: 350px;
+    overflow: auto;
+    width: 100%; 
+}
+
+.table-wrapperService table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-wrapperService table thead {
+    position: -webkit-sticky;
+    /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+.table-wrapperService table thead th {
+    background-color: #fff;
+    font-weight: bold !important;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* esto espera las palabras 
+  td{
+    word-break: break-all;
+  }*/
+
+
+/* Tamaño del scroll */
+.table-wrapperService::-webkit-scrollbar {
+    width: 10px;
+
+    height: 10px;
+}
+
+/* Estilos barra (thumb) de scroll */
+.table-wrapperService::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.table-wrapperService::-webkit-scrollbar-thumb:active {
+    background-color: #999999;
+}
+
+.table-wrapperService::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos track de scroll */
+.table-wrapperService::-webkit-scrollbar-track {
+    background: #e1e1e1;
+    border-radius: 4px;
+}
+
+.table-wrapperService::-webkit-scrollbar-track:hover,
+.table-wrapperService::-webkit-scrollbar-track:active {
+    background: #d4d4d4;
+}

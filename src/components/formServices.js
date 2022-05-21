@@ -15,6 +15,7 @@ function Form() {
   const [itemsColor, setItemsColor] = useState([]);
   const [itemsinspectorType, setItemsinspectorType] = useState([]);
   const [itemsSticker, setItemsSticker] = useState([]);
+  const web = `http://devcompuservi.ddns.net:8080/`;
 
   //options to autocomplete
   const optionsInspectors = itemsinspector.map((op) => ({
@@ -24,6 +25,7 @@ function Form() {
 
   const optionsCustomer = itemsCustomer.map((op) => ({
     id: op.idCustomer,
+    businessName: op.businessName,
     label: op.firstName + " " + op.lastName,
   }));
 
@@ -34,54 +36,52 @@ function Form() {
 
   const optionsBrands = itemsBrand.map((op) => ({
     id: op.idBrand,
-    label: op.name
+    label: op.name,
   }));
 
   const optionsModel = itemsModel.map((op) => ({
     id: op.idModel,
-    label: op.name
+    idBrand: op.idBrand,
+    label: op.name,
   }));
-
+  //console.log(optionsModel[0]);
   const optionsDrive = itemsDrive.map((op) => ({
     id: op.idDrivetrain,
-    label: op.name
+    label: op.name,
   }));
 
   const optionsColor = itemsColor.map((op) => ({
     id: op.idColor,
-    label: op.name
+    label: op.name,
   }));
 
   const optionsInspectorType = itemsinspectorType.map((op) => ({
     id: op.idInspectionType,
-    label: op.name
+    label: op.name,
   }));
 
   const optionsSticker = itemsSticker.map((op) => ({
     id: op.idSticker,
-    label: op.stickerNumber
+    label: op.stickerNumber,
   }));
 
   const navigate = useNavigate();
 
   //get inspector
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/inspector/list")
+    fetch(`${web}inspector/list`)
       .then((res) => res.json())
       .then(
         (result) => {
           setItemsinspector(result);
         },
-        // Nota: es importante manejar errores aquí y no en
-        // un bloque catch() para que no interceptemos errores
-        // de errores reales en los componentes.
         (error) => {}
       );
   }, []);
 
   //get customer
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/customer/list")
+    fetch(`${web}customer/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -96,7 +96,7 @@ function Form() {
 
   //get VType
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/vehicletype/list")
+    fetch(`${web}vehicletype/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -111,7 +111,7 @@ function Form() {
 
   //get brand
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/brand/list")
+    fetch(`${web}brand/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -126,7 +126,7 @@ function Form() {
 
   //get model
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/model/list")
+    fetch(`${web}model/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -141,7 +141,7 @@ function Form() {
 
   //get drivetrain
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/drivetrain/list")
+    fetch(`${web}drivetrain/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -156,7 +156,7 @@ function Form() {
 
   //get color
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/color/list")
+    fetch(`${web}color/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -171,7 +171,7 @@ function Form() {
 
   //get inspector type
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/inspectiontype/list")
+    fetch(`${web}inspectiontype/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -186,7 +186,7 @@ function Form() {
 
   //get sticker
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/sticker/list")
+    fetch(`${web}sticker/listbyavailable`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -216,6 +216,51 @@ function Form() {
   const [ServicePaid, setServicePaid] = useState("");
   const [Approved, setApproved] = useState("");
   const [sticker, setSticker] = useState(0);
+  const saveService = async (e) => {
+    e.preventDefault();
+    try {
+      const resp = await fetch(`${web}service/save`, {
+        method: "POST",
+        body: JSON.stringify({
+          idBrand: Brand,
+          idModel: Model,
+          idColor: Color,
+          idDrivetrain: Drivetrain,
+          idVehicleType: VType,
+          year: Year,
+          miles: Miles,
+          date: Date,
+          idInspector: Inspector,
+          idInspectionType: InspectionTypeName,
+          idCustomer: Customer,
+          price: Price,
+          servicePaid: ServicePaid,
+          inspectionApproved: Approved,
+          vinnumber: VINNumber,
+          idSticker: sticker,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const confirm = await resp.json();
+
+      if (confirm === "OK") {
+        const message = await swal({
+          title: "Save!",
+          text: "Save Successfully!",
+          icon: "success",
+        }).then(() => {
+          navigate("/dashboard");
+        });
+        //message.navigate("/dashboard");
+      } else {
+        const message = await swal({
+          title: "Error",
+          text: `Please fill all the fields!  ${confirm}`,
+          icon: "error",
+        });
+      }
+    } catch (e) {}
+  };
 
   const submit = (e) => {
     console.log(
@@ -236,7 +281,10 @@ function Form() {
       Approved,
       sticker
     );
+
+    console.log(e);
     e.preventDefault();
+
     fetch("http://devcompuservi.ddns.net:8080/service/save", {
       method: "POST",
       body: JSON.stringify({
@@ -294,7 +342,7 @@ function Form() {
                   id="inputInspector"
                   options={optionsInspectors}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -310,6 +358,7 @@ function Form() {
               </label>
               <input
                 type="date"
+                // value={Date.}
                 id="inputDate"
                 className="form-control ip1 mt-4"
                 onChange={(e) => setDate(e.target.value)}
@@ -328,7 +377,7 @@ function Form() {
                   id="inputCustomer"
                   options={optionsCustomer}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -369,7 +418,7 @@ function Form() {
                   id="inputVType"
                   options={optionsVTYpe}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -379,12 +428,13 @@ function Form() {
                 />
               </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-6 ">
               <div className="col-md-1">
                 <label htmlFor="inputEmail4" className="form-label">
                   Brand
                 </label>
               </div>
+              {/*-------- inputBrand ------------*/}
               <div>
                 <br />
                 <Autocomplete
@@ -394,7 +444,7 @@ function Form() {
                   id="inputBrand"
                   options={optionsBrands}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -403,6 +453,7 @@ function Form() {
                   )}
                 />
               </div>
+              {/* ------------------------------------------ */}
             </div>
             <div className="col-md-6">
               <div className="col-md-1">
@@ -430,9 +481,11 @@ function Form() {
                     setModel(value.id);
                   }}
                   id="inputModel"
-                  options={optionsModel}
+                  options={optionsModel.filter(
+                    (optionsModel) => optionsModel.idBrand === Brand
+                  )}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -457,7 +510,7 @@ function Form() {
                   id="inputDrivetrain"
                   options={optionsDrive}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -482,7 +535,7 @@ function Form() {
                   id="inputColor"
                   options={optionsColor}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -520,7 +573,7 @@ function Form() {
                   id="inputSticker"
                   options={optionsSticker}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -547,7 +600,7 @@ function Form() {
                   id="inputInspectorType"
                   options={optionsInspectorType}
                   sx={{ width: "100%" }}
-                  size={'small'}
+                  size={"small"}
                   isOptionEqualToValue={(option, value) =>
                     option.id === value.id
                   }
@@ -611,7 +664,7 @@ function Form() {
               <button
                 type="submit"
                 className="text-dark btn bt1"
-                onClick={submit}
+                onClick={saveService}
               >
                 Save
               </button>

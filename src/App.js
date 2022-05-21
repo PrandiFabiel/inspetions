@@ -19,6 +19,7 @@ import FormModel from "./components/formModel";
 import FormVehicleType from "./components/formVehicleType";
 import FormColor from "./components/formColors";
 import FormSticker from "./components/formSticker";
+import FormStickerGenerator from "./components/formStickerGenerator";
 import Main from "./components/list/main";
 import ListCities from "./components/list/listCities";
 import ListState from "./components/list/listState";
@@ -31,6 +32,7 @@ import ListVehicleModels from "./components/list/listVehicleModels";
 import ListVehicleTypes from "./components/list/listVehicleTypes";
 import ListColors from "./components/list/listColors";
 import ListStickers from "./components/list/listStickers";
+
 
 
 function App() {
@@ -57,6 +59,7 @@ function App() {
             <Route path="/vehicleType" element={<FormVehicleType/>} />
             <Route path="/color" element={<FormColor/>} />
             <Route path="/sticker" element={<FormSticker/>} />
+            <Route path="/stickerGenerator" element={<FormStickerGenerator/>} />
             <Route path="/main" element={<Main/>} />
             <Route path="/listCities" element={<ListCities/>} />
             <Route path="/listState" element={<ListState/>} />
@@ -69,6 +72,7 @@ function App() {
             <Route path="/listVHTypes" element={<ListVehicleTypes/>} />
             <Route path="/listColors" element={<ListColors/>} />
             <Route path="/listStickers" element={<ListStickers/>} />
+
           </Routes>
       </BrowserRouter>
     </div>

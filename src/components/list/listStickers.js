@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import BarraSuperior from "../barraSuperior";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import  DataAccess  from "../DataAccess";
 function ListStickers() {
   const [items, setItems] = useState([]);
 
   //get cities
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/sticker/list")
+    fetch(`${DataAccess}sticker/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -25,7 +26,7 @@ function ListStickers() {
   const edit = (e) => {
     console.log(Name);
     e.preventDefault();
-    fetch("http://devcompuservi.ddns.net:8080/sticker/save", {
+    fetch(`${DataAccess}sticker/save`, {
       method: "POST",
       body: JSON.stringify({
         idSticker: inputSearch,
@@ -48,7 +49,7 @@ function ListStickers() {
   };
 
   function buscar(id) {
-    fetch("http://devcompuservi.ddns.net:8080/sticker/find?id=" + id)
+    fetch(`${DataAccess}sticker/find?id= ${id}`)
       .then((res) => res.json())
       .then(
         (result) => {

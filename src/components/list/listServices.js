@@ -4,23 +4,37 @@ import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import DataAccess from "../DataAccess";
+import "../../css/listServices.css";
 function ListServices() {
   const [itemsService, setItemsService] = useState([]);
   const [tablaService, setTablaService] = useState([]);
   const [busqueda, setBusqueda] = useState([]);
   const [busquedaBySticker, setBusquedaBySticker] = useState([]);
+  const [busquedaDate, setBusquedaDate] = useState([]);
 
   //referencias
-  const inspectorRef = useRef(); 
-  
+  const inspectorRef = useRef();
+
   //get services
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/service/list")
+    fetch(`${DataAccess}service/list`)
       .then((res) => res.json())
       .then(
         (result) => {
           setItemsService(result);
           setTablaService(result);
+          let SumComission = 0;
+          let SumPrices = 0;
+
+          result.map((element) => {
+            SumComission = element.commission + SumComission;
+            SumPrices = element.price + SumPrices;
+          });
+          console.log(SumComission);
+          console.log(SumPrices);
+          settotalComission(SumComission);
+          settotalPrice(SumPrices);
         },
         (error) => {}
       );
@@ -30,6 +44,12 @@ function ListServices() {
   const handleChange = (e) => {
     setBusqueda(e.target.value);
     filtrar(e.target.value);
+    filterByDate();
+  };
+
+  const handleChangeDate = (e) => {
+    setBusquedaDate(e.target.value);
+    filterByDate(e.target.value);
   };
 
   const handleChangeSticker = (e) => {
@@ -80,6 +100,22 @@ function ListServices() {
     setItemsService(results);
   };
 
+  const filterByDate = (terminoBusqueda) => {
+    var results = tablaService.filter((e) => {
+      if (
+        e.date
+          ? e.date
+              .toString()
+              .toLowerCase()
+              .includes(terminoBusqueda.toLowerCase())
+          : ""
+      ) {
+        return e;
+      }
+    });
+    setItemsService(results);
+  };
+
   //edit services
   let [inputSearch, setInputSearch] = useState("");
   const [Inspector, setInspector] = useState("");
@@ -99,14 +135,11 @@ function ListServices() {
   const [Approved, setApproved] = useState("");
   const [sticker, setSticker] = useState(0);
   let edited = 0;
-  
+
   const edit = (e) => {
-    console.log(
-      ServicePaid,
-      Approved,
-    );
+    console.log(ServicePaid, Approved);
     e.preventDefault();
-    fetch("http://devcompuservi.ddns.net:8080/service/save", {
+    fetch(`${DataAccess}service/save`, {
       method: "POST",
       body: JSON.stringify({
         idService: inputSearch,
@@ -130,7 +163,7 @@ function ListServices() {
       headers: { "Content-Type": "application/json" },
     }).then((res) => {
       res.json();
-      console.log(res.ok); //la respuesta da error pero aun asi se guarda...
+      console.log(res.ok);
       swal({
         title: "Edited!",
         text: "Successfully Edited!",
@@ -141,13 +174,11 @@ function ListServices() {
     });
   };
 
-  const options = ['Option 1', 'Option 2'];
-
-  
+  const options = ["Option 1", "Option 2"];
 
   function buscar(id) {
     //get inspectors
-    fetch("http://devcompuservi.ddns.net:8080/service/find?id=" + id)
+    fetch(`${DataAccess}service/find?id= ${id}`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -213,25 +244,24 @@ function ListServices() {
   const [itemsColor, setItemsColor] = useState([]);
   const [itemsinspectorType, setItemsinspectorType] = useState([]);
   const [itemsSticker, setItemsSticker] = useState([]);
+  const [totalComission, settotalComission] = useState(0);
+  const [totalPrice, settotalPrice] = useState(0);
 
   //get inspector
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/inspector/list")
+    fetch(`${DataAccess}inspector/list`)
       .then((res) => res.json())
       .then(
         (result) => {
           setItemsinspector(result);
         },
-        // Nota: es importante manejar errores aquí y no en
-        // un bloque catch() para que no interceptemos errores
-        // de errores reales en los componentes.
         (error) => {}
       );
   }, []);
 
   //get customer
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/customer/list")
+    fetch(`${DataAccess}customer/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -246,7 +276,7 @@ function ListServices() {
 
   //get VType
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/vehicletype/list")
+    fetch(`${DataAccess}vehicletype/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -261,7 +291,7 @@ function ListServices() {
 
   //get brand
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/brand/list")
+    fetch(`${DataAccess}brand/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -276,7 +306,7 @@ function ListServices() {
 
   //get model
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/model/list")
+    fetch(`${DataAccess}model/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -291,7 +321,7 @@ function ListServices() {
 
   //get drivetrain
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/drivetrain/list")
+    fetch(`${DataAccess}drivetrain/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -306,7 +336,7 @@ function ListServices() {
 
   //get color
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/color/list")
+    fetch(`${DataAccess}color/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -321,7 +351,7 @@ function ListServices() {
 
   //get inspector type
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/inspectiontype/list")
+    fetch(`${DataAccess}inspectiontype/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -336,7 +366,7 @@ function ListServices() {
 
   //get sticker
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/sticker/list")
+    fetch(`${DataAccess}sticker/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -349,14 +379,13 @@ function ListServices() {
       );
   }, []);
 
-  
   //options to autocomplete
   const optionsInspectors = itemsinspector.map((op) => ({
     id: op.idInspector,
     label: op.firstName + " " + op.lastName,
   }));
 
-  const [value, setValue] = useState(options[0])
+  const [value, setValue] = useState(options[0]);
 
   return (
     <div className="divFa">
@@ -366,7 +395,7 @@ function ListServices() {
           <div className="row">
             <h1 className="col-md-10">Services</h1>
             <div className="row">
-              <div className="col-md-4">
+              <div className="col-md-3">
                 <input
                   type="text"
                   className="form-control"
@@ -376,7 +405,7 @@ function ListServices() {
                   onChange={handleChange}
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-md-2">
                 <input
                   type="text"
                   className="form-control"
@@ -384,6 +413,15 @@ function ListServices() {
                   id="inputSearchSticker"
                   placeholder="Filter by sticker..."
                   onChange={handleChangeSticker}
+                />
+              </div>
+              <div className="col-md-3">
+                <input
+                  type="date"
+                  className="form-control"
+                  value={busquedaDate}
+                  id="inputSearch"
+                  onChange={handleChangeDate}
                 />
               </div>
               <div className="col-md-2 mt-2">
@@ -407,7 +445,7 @@ function ListServices() {
               </div>
             </div>
           </div>
-          <div className="table-responsive table-wrapper">
+          <div className="table-responsive table-wrapperService">
             <table className=" table table-striped bg-white">
               <thead className="">
                 <tr>
@@ -426,6 +464,7 @@ function ListServices() {
                   <th scope="col">Sticker</th>
                   <th scope="col">InspectionType</th>
                   <th scope="col">Price</th>
+                  <th scope="col">Commission</th>
                 </tr>
               </thead>
               <tbody>
@@ -581,10 +620,24 @@ function ListServices() {
                     >
                       {item.price}
                     </td>
+                    <td
+                      data-bs-target="#exampleModal"
+                      data-bs-toggle="modal"
+                      onClick={() => {
+                        buscar(item.idService);
+                        setInputSearch(item.idService);
+                      }}
+                    >
+                      {item.commission}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="row">
+            <div className="col-md-8 fw-bold fs-5">{`Total commissions: $${totalComission}`}</div>
+            <div className="col-md-4 fw-bold fs-5">{`Total Prices: $${totalPrice}`}</div>
           </div>
         </div>
       </div>
@@ -615,24 +668,24 @@ function ListServices() {
                     Inpector
                   </label>
                   <div>
-                <Autocomplete
-                  onChange={(event, value) => {
-                    setInspector(value.id);
-                  }}
-                  //id="inputInspector"
-                  ref={inspectorRef}
-                  value={value}
-                  options={optionsInspectors}
-                  sx={{ width: "100%" }}
-                  size={'small'}
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select Inpector" />
-                  )}
-                />
-              </div>
+                    <Autocomplete
+                      onChange={(event, value) => {
+                        setInspector(value.id);
+                      }}
+                      //id="inputInspector"
+                      ref={inspectorRef}
+                      value={value}
+                      options={optionsInspectors}
+                      sx={{ width: "100%" }}
+                      size={"small"}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Inpector" />
+                      )}
+                    />
+                  </div>
                 </div>
                 <div className="col-md-4">
                   <label htmlFor="inputEmail4" className="fs-4 form-label">

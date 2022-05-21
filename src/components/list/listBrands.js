@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import BarraSuperior from "../barraSuperior";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import  DataAccess  from "../DataAccess";
 function ListBrands() {
   const [items, setItems] = useState([]);
 
   //get brand
   useEffect(() => {
-    fetch("http://devcompuservi.ddns.net:8080/brand/list")
+    fetch(`${DataAccess}brand/list`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -25,7 +26,7 @@ function ListBrands() {
   const edit = (e) => {
     console.log(Name);
     e.preventDefault();
-    fetch("http://devcompuservi.ddns.net:8080/brand/save", {
+    fetch(`${DataAccess}brand/save`, {
       method: "POST",
       body: JSON.stringify({
         idBrand: inputSearch,
@@ -48,7 +49,7 @@ function ListBrands() {
   };
 
   function buscar(id) {
-    fetch("http://devcompuservi.ddns.net:8080/brand/find?id=" + id)
+    fetch(`${DataAccess}/brand/find?id= ${id}`)
       .then((res) => res.json())
       .then(
         (result) => {
